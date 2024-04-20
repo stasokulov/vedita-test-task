@@ -91,6 +91,7 @@ const getCountryNameByAlpha3Code = (code: string): string | undefined => countri
   font-weight: 300;
   font-size: 14px;
   line-height: 20px;
+  cursor: pointer;
 }
 
 .country__back-icon {
