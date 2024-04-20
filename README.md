@@ -2,7 +2,7 @@
 
 Сайт с результатом:
 
-Описание тестового задания:
+Описание тестового задания: https://github.com/stasokulov/vedita-test-task/tree/main/test-task-description
 
 ## Type Support for `.vue` Imports in TS
 
