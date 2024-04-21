@@ -14,8 +14,30 @@ const populationWithCommas: ComputedRef<string | undefined> = computed(() => {
   if (typeof country.value?.population !== 'number') return
   return getStringWithCommasFromNumber(country.value.population)
 })
+const curenciesWithCommas: ComputedRef<string[] | undefined> = computed(() => {
+  if (!country.value?.currencies) return
+  const nameArr = country.value.currencies.map((item) => item.name)
+  if (!nameArr) return
+  return getStringWithCommaByIndex(nameArr)
+})
+const languagesWithCommas: ComputedRef<string[] | undefined> = computed(() => {
+  if (!country.value?.languages) return
+  const nameArr = country.value.languages.map((item) => item.name)
+  if (!nameArr) return
+  return getStringWithCommaByIndex(nameArr)
+})
 
-const getCountryNameByAlpha3Code = (code: string): string | undefined => countriesStore.countries.find(country => country.alpha3Code === code)?.name
+const getCountryNameByAlpha3Code = (code: string): string | undefined =>
+  countriesStore.countries.find((country) => country.alpha3Code === code)?.name
+
+const getStringWithCommaByIndex = (arr: (string | undefined)[]): string[] => {
+  const checkedNameArr: string[] = []
+  arr.forEach((item) => {
+    if (typeof item === 'string') checkedNameArr.push(item)
+  })
+  const nameArrWithCommas = checkedNameArr.map((item, index) => (index === 0 ? item : `, ${item}`))
+  return nameArrWithCommas
+}
 </script>
 
 <template>
@@ -34,35 +56,55 @@ const getCountryNameByAlpha3Code = (code: string): string | undefined => countri
         <h2 class="country__name">{{ country.name }}</h2>
         <div class="country__props">
           <div class="country__sub-props">
-          <p class="country__prop"><span class="country__prop-title">Native Name</span>: {{ country.nativeName ?? NO_DATA }}</p>
-          <p class="country__prop"><span class="country__prop-title">Population</span>: {{ populationWithCommas ?? NO_DATA }}</p>
-          <p class="country__prop"><span class="country__prop-title">Region</span>: {{ country.region ?? NO_DATA }}</p>
-          <p class="country__prop"><span class="country__prop-title">Sub Region</span>: {{ country.subregion ?? NO_DATA }}</p>
-          <p class="country__prop"><span class="country__prop-title">Capital</span>: {{ country.capital ?? NO_DATA }}</p>
-        </div>
-        <div class="country__sub-props">
-          <p class="country__prop"><span class="country__prop-title">Top Level Domain</span>: {{ country.nativeName ?? NO_DATA  }}</p>
-          <p class="country__prop">
-            <span class="country__prop-title">Currencies</span>:
-            <template v-if="country.currencies?.length">
-              <span v-for="currency in country.currencies" :key="currency.code">{{ currency.name }}</span>
-            </template>
-            <span v-else>{{ NO_DATA }}</span>
-          </p>
-          <p class="country__prop">
-            <span class="country__prop-title">Languages</span>:
-            <template v-if="country.languages?.length">
-              <span v-for="language in country.languages" :key="language.iso639_1">{{ language.name }}</span>
-            </template>
-            <span v-else>{{ NO_DATA }}</span>
-          </p>
-        </div>
+            <p class="country__prop">
+              <span class="country__prop-title">Native Name</span>:
+              {{ country.nativeName ?? NO_DATA }}
+            </p>
+            <p class="country__prop">
+              <span class="country__prop-title">Population</span>:
+              {{ populationWithCommas ?? NO_DATA }}
+            </p>
+            <p class="country__prop">
+              <span class="country__prop-title">Region</span>: {{ country.region ?? NO_DATA }}
+            </p>
+            <p class="country__prop">
+              <span class="country__prop-title">Sub Region</span>:
+              {{ country.subregion ?? NO_DATA }}
+            </p>
+            <p class="country__prop">
+              <span class="country__prop-title">Capital</span>: {{ country.capital ?? NO_DATA }}
+            </p>
+          </div>
+          <div class="country__sub-props">
+            <p class="country__prop">
+              <span class="country__prop-title">Top Level Domain</span>:
+              {{ country.topLevelDomain[0] ?? NO_DATA }}
+            </p>
+            <p class="country__prop">
+              <span class="country__prop-title">Currencies</span>:
+              <template v-if="curenciesWithCommas?.length">
+                <span v-for="currency in curenciesWithCommas" :key="currency">
+                  {{ currency }}
+                </span>
+              </template>
+              <span v-else>{{ NO_DATA }}</span>
+            </p>
+            <p class="country__prop">
+              <span class="country__prop-title">Languages</span>:
+              <template v-if="languagesWithCommas?.length">
+                <span v-for="language in languagesWithCommas" :key="language">
+                  {{ language }}
+                </span>
+              </template>
+              <span v-else>{{ NO_DATA }}</span>
+            </p>
+          </div>
         </div>
         <div class="country__borders">
           <h3 class="country__borders-title">Border&nbsp;Countries:</h3>
           <ul v-if="country.borders" class="country__borders-list">
             <li v-for="item in country.borders" :key="item" class="country__borders-state">
-              {{ getCountryNameByAlpha3Code(item) ?? NO_DATA  }}
+              {{ getCountryNameByAlpha3Code(item) ?? NO_DATA }}
             </li>
           </ul>
           <div v-else>{{ NO_DATA }}</div>
@@ -105,6 +147,7 @@ const getCountryNameByAlpha3Code = (code: string): string | undefined => countri
 
 .country__flag {
   display: flex;
+  // max-width: 560px;
 }
 
 .country__flag-img {
@@ -216,9 +259,9 @@ const getCountryNameByAlpha3Code = (code: string): string | undefined => countri
   }
 }
 
-@media (width >= 1200px) {
+@media (width >= 1280px) {
   .country__content {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 560px 1fr;
     column-gap: 120px;
   }
 
@@ -237,6 +280,10 @@ const getCountryNameByAlpha3Code = (code: string): string | undefined => countri
   .country__borders {
     display: flex;
     gap: 16px;
+  }
+
+  .country__borders-title {
+    margin-bottom: 0;
   }
 }
 </style>

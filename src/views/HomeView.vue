@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, type ComputedRef } from 'vue'
 import { useCountriesStore, type TCountryArr } from '@/stores/countries'
+import { NO_DATA } from '@/constans'
 
 import CountryCard from '@/components/CountryCard.vue'
 import SearchIcon from '@/components/icons/IconSearch.vue'
@@ -12,9 +13,12 @@ const searchString = ref<string>('')
 const countriesArr: ComputedRef<TCountryArr> = computed(() => countriesStore.countries)
 const filtredCountriesArr: ComputedRef<TCountryArr> = computed(() => {
   return searchString.value
-  ? countriesArr.value.filter(country => country.name.toLowerCase().includes(searchString.value.toLowerCase()))
-  : countriesArr.value
+    ? countriesArr.value.filter((country) =>
+        country.name.toLowerCase().includes(searchString.value.toLowerCase())
+      )
+    : countriesArr.value
 })
+const isEmptyCountriesArr: ComputedRef<boolean> = computed(() => !filtredCountriesArr.value.length)
 
 onMounted(() => {
   countriesStore.fetchCountries()
@@ -25,10 +29,22 @@ onMounted(() => {
   <main class="home-page">
     <div class="home-page__search">
       <SearchIcon class="home-page__search-icon" />
-      <input class="home-page__search-input" placeholder="Search for a country…" v-model="searchString">
+      <input
+        class="home-page__search-input"
+        placeholder="Search for a country…"
+        v-model="searchString"
+      />
     </div>
-    <div class="home-page__country-list">
-      <RouterLink to="/about" v-for="country in filtredCountriesArr" :key="country.name" class="home-page__country-link">
+    <div v-if="isEmptyCountriesArr" class="home-page__empty">
+      {{ NO_DATA }}
+    </div>
+    <div v-else class="home-page__country-list">
+      <RouterLink
+        to="/about"
+        v-for="country in filtredCountriesArr"
+        :key="country.name"
+        class="home-page__country-link"
+      >
         <CountryCard
           v-if="country.name"
           :country-data="country"
@@ -72,13 +88,21 @@ main {
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
-  line-height: 20px;;
+  line-height: 20px;
   border-width: 0;
 
   &::placeholder {
     color: hsl(0, 0%, 77%);
     opacity: 1; /* Firefox */
   }
+}
+
+.home-page__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+  padding-top: 50px;
 }
 
 .home-page__country-list {
@@ -126,7 +150,6 @@ main {
     grid-template-columns: 1fr 1fr;
     gap: 74px;
   }
-
 }
 
 @media (width >= 1024px) {
