@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type ICountry } from '@/stores/countries';
+import { type ICountry } from '@/stores/countries'
 import { NO_DATA } from '@/constans'
 import { getStringWithCommasFromNumber } from '@/composables/populationWithCommas'
 
@@ -12,15 +12,25 @@ const populationWithCommas = getStringWithCommasFromNumber(props.countryData.pop
 
 <template>
   <div class="card">
-    <div class="card__flag">
-      <img :alt="countryData.name" class="card__flag-img" :src="countryData.flag" />
-    </div>
-    <div class="card__discription">
-      <h2 class="card__country-name">{{ countryData.name ?? NO_DATA }}</h2>
-      <p class="card__country-prop"><span class="card__country-prop-title">Population</span>: {{ populationWithCommas ?? NO_DATA }}</p>
-      <p class="card__country-prop"><span class="card__country-prop-title">Region</span>: {{ countryData.region ?? NO_DATA }}</p>
-      <p class="card__country-prop"><span class="card__country-prop-title">Capital</span>: {{ countryData.capital ?? NO_DATA }}</p>
-    </div>
+    <RouterLink :to="`/about/${countryData.alpha2Code.toLowerCase()}`" class="card__link">
+      <div class="card__flag">
+        <img :alt="countryData.name" class="card__flag-img" :src="countryData.flag" />
+      </div>
+      <div class="card__discription">
+        <h2 class="card__country-name">{{ countryData.name ?? NO_DATA }}</h2>
+        <p class="card__country-prop">
+          <span class="card__country-prop-title">Population</span>:
+          {{ populationWithCommas ?? NO_DATA }}
+        </p>
+        <p class="card__country-prop">
+          <span class="card__country-prop-title">Region</span>: {{ countryData.region ?? NO_DATA }}
+        </p>
+        <p class="card__country-prop">
+          <span class="card__country-prop-title">Capital</span>:
+          {{ countryData.capital ?? NO_DATA }}
+        </p>
+      </div>
+    </RouterLink>
   </div>
 </template>
 
@@ -30,6 +40,10 @@ const populationWithCommas = getStringWithCommasFromNumber(props.countryData.pop
   box-shadow: 0px 0px 7px 2px rgba(0, 0, 0, 0.0294384);
   border-radius: 5px;
   color: var(--color-text);
+}
+
+.card__link {
+  text-decoration: none;
 }
 
 .card__flag {
@@ -44,6 +58,7 @@ const populationWithCommas = getStringWithCommasFromNumber(props.countryData.pop
 
 .card__discription {
   padding: 24px 24px 46px;
+  color: var(--color-text);
 }
 
 .card__country-name {

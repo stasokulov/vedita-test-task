@@ -35,14 +35,9 @@ const isEmptyCountriesArr: ComputedRef<boolean> = computed(() => !filtredCountri
       {{ NO_DATA }}
     </div>
     <div v-else class="home-page__country-list">
-      <RouterLink
-        :to="`/about/${country.alpha2Code.toLowerCase()}`"
-        v-for="country in filtredCountriesArr"
-        :key="country.name"
-        class="home-page__country-link"
-      >
+      <template v-for="country in filtredCountriesArr" :key="country.name">
         <CountryCard v-if="country.name" :country-data="country" class="home-page__country-item" />
-      </RouterLink>
+      </template>
     </div>
   </main>
 </template>
@@ -101,12 +96,6 @@ main {
   flex-direction: column;
   align-items: center;
   gap: 40px;
-}
-
-.home-page__country-link {
-  display: block;
-  height: 100%;
-  text-decoration: none;
 }
 
 .home-page__country-item {
