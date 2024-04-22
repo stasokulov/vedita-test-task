@@ -1,5 +1,14 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
+
+import { useCountriesStore } from '@/stores/countries'
+
+const countriesStore = useCountriesStore()
+
+onMounted(() => {
+  countriesStore.fetchCountries()
+})
 </script>
 
 <template>
@@ -11,7 +20,6 @@ import { RouterView } from 'vue-router'
 </template>
 
 <style scoped lang="scss">
-
 header {
   padding: 30px 16px;
   background-color: var(--color-background-light);

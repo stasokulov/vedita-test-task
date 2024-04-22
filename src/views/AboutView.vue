@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, type ComputedRef } from 'vue'
+import { computed, type ComputedRef, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 
 import { useCountriesStore, type ICountry } from '@/stores/countries'
 import { NO_DATA } from '@/constans'
@@ -8,6 +9,7 @@ import { getStringWithCommasFromNumber } from '@/composables/populationWithComma
 import BackIcon from '@/components/icons/IconBack.vue'
 
 const countriesStore = useCountriesStore()
+const route = useRoute()
 
 const country: ComputedRef<ICountry | undefined> = computed(() => countriesStore.getActiveCountry)
 const populationWithCommas: ComputedRef<string | undefined> = computed(() => {
@@ -38,6 +40,10 @@ const getStringWithCommaByIndex = (arr: (string | undefined)[]): string[] => {
   const nameArrWithCommas = checkedNameArr.map((item, index) => (index === 0 ? item : `, ${item}`))
   return nameArrWithCommas
 }
+
+onMounted(() => {
+  countriesStore.setActiveCountryCode(route.params.id as string)
+})
 </script>
 
 <template>

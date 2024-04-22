@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, type ComputedRef } from 'vue'
+import { computed, ref, type ComputedRef } from 'vue'
 import { useCountriesStore, type TCountryArr } from '@/stores/countries'
 import { NO_DATA } from '@/constans'
 
@@ -19,10 +19,6 @@ const filtredCountriesArr: ComputedRef<TCountryArr> = computed(() => {
     : countriesArr.value
 })
 const isEmptyCountriesArr: ComputedRef<boolean> = computed(() => !filtredCountriesArr.value.length)
-
-onMounted(() => {
-  countriesStore.fetchCountries()
-})
 </script>
 
 <template>
@@ -40,17 +36,12 @@ onMounted(() => {
     </div>
     <div v-else class="home-page__country-list">
       <RouterLink
-        to="/about"
+        :to="`/about/${country.alpha2Code.toLowerCase()}`"
         v-for="country in filtredCountriesArr"
         :key="country.name"
         class="home-page__country-link"
       >
-        <CountryCard
-          v-if="country.name"
-          :country-data="country"
-          class="home-page__country-item"
-          @click="countriesStore.setActiveCountryName(country.name)"
-        />
+        <CountryCard v-if="country.name" :country-data="country" class="home-page__country-item" />
       </RouterLink>
     </div>
   </main>
