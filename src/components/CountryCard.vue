@@ -48,7 +48,7 @@ const populationWithCommas = getStringWithCommasFromNumber(props.countryData.pop
 
 .card__flag {
   display: flex;
-  aspect-ratio: 33/20;
+  height: 160px;
 }
 
 .card__flag-img {

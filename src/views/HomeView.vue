@@ -101,8 +101,6 @@ main {
 .home-page__country-item {
   max-width: 264px;
   width: 100%;
-  height: 100%;
-  margin: auto;
   overflow: hidden;
 }
 
@@ -129,6 +127,7 @@ main {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 74px;
+    align-items: stretch;
   }
 }
 
